@@ -17,12 +17,18 @@ type MGSETTINGS struct {
 	data     map[string]any
 }
 
-func Load(nameApp string) *MGSETTINGS {
+func Load(nameApp string, defaultPathHome bool) *MGSETTINGS {
 	mgsettings := &MGSETTINGS{}
 	mgsettings.data = make(map[string]any)
 
-	pathHome, _ := os.UserHomeDir()
-	pathConfig := path.Join(pathHome, fmt.Sprintf(".%s", nameApp))
+	var pathHome string
+	var pathConfig string
+	if defaultPathHome {
+		pathHome, _ = os.UserHomeDir()
+		pathConfig = path.Join(pathHome, fmt.Sprintf(".%s", nameApp))
+	} else {
+		pathConfig = nameApp
+	}
 
 	_, errDir := os.Stat(pathConfig)
 	if errDir != nil {
