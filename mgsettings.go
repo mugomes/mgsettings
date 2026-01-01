@@ -7,70 +7,106 @@ package mgsettings
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path"
 )
 
 type MGSETTINGS struct {
 	pathfile string
-	data     map[string]any
+	data     map[string]json.RawMessage
 }
 
-func Load(nameApp string, defaultPathHome bool) *MGSETTINGS {
-	mgsettings := &MGSETTINGS{}
-	mgsettings.data = make(map[string]any)
+func Load(nameApp string, defaultPathHome bool) (*MGSETTINGS, error) {
+	m := &MGSETTINGS{
+		data: make(map[string]json.RawMessage),
+	}
 
-	var pathHome string
 	var pathConfig string
 	if defaultPathHome {
-		pathHome, _ = os.UserHomeDir()
-		pathConfig = path.Join(pathHome, fmt.Sprintf(".%s", nameApp))
+		home, _ := os.UserHomeDir()
+		pathConfig = path.Join(home, "."+nameApp)
 	} else {
 		pathConfig = nameApp
 	}
 
-	_, errDir := os.Stat(pathConfig)
-	if errDir != nil {
-		os.Mkdir(pathConfig, os.ModePerm)
+	if err := os.MkdirAll(pathConfig, 0755); err != nil {
+		return nil, err
 	}
 
-	mgsettings.pathfile = path.Join(pathConfig, "config.json")
-	_, errFile := os.Stat(mgsettings.pathfile)
+	m.pathfile = path.Join(pathConfig, "config.json")
 
-	if errFile == nil {
-		var data map[string]any
-		loadFile, _ := os.ReadFile(mgsettings.pathfile)
-		err := json.Unmarshal(loadFile, &data)
-		if err == nil {
-			mgsettings.data = data
-		}
+	if raw, err := os.ReadFile(m.pathfile); err == nil {
+		_ = json.Unmarshal(raw, &m.data)
 	}
 
-	return mgsettings
+	return m, nil
 }
 
-func (mgsettings *MGSETTINGS) Set(name string, value any) {
-	mgsettings.data[name] = value
+func (m *MGSETTINGS) set(key string, v any) {
+	raw, _ := json.Marshal(v)
+	m.data[key] = raw
 }
 
-func (mgsettings *MGSETTINGS) Get(name string, defaultValue any) any {
-	valor, ok := mgsettings.data[name]
-	if ok {
-		return valor
-	} else {
-		switch r := defaultValue.(type) {
-		case int, int64:
-			return float64(r.(int))
-		case float32, float64:
-			return float64(r.(int))
-		default:
-			return r
-		}
+func (m *MGSETTINGS) get(key string, out any) bool {
+	raw, ok := m.data[key]
+	if !ok {
+		return false
 	}
+	return json.Unmarshal(raw, out) == nil
 }
 
-func (mgsettings *MGSETTINGS) Save() {
-	json, _ := json.Marshal(mgsettings.data)
-	os.WriteFile(mgsettings.pathfile, json, os.ModePerm)
+func (m *MGSETTINGS) SetString(key, value string) {
+	m.set(key, value)
+}
+
+func (m *MGSETTINGS) SetInt(key string, value int) {
+	m.set(key, value)
+}
+
+func (m *MGSETTINGS) SetBool(key string, value bool) {
+	m.set(key, value)
+}
+
+func (m *MGSETTINGS) SetStringSlice(key string, value []string) {
+	m.set(key, value)
+}
+
+func (m *MGSETTINGS) GetString(key string, def string) string {
+	var v string
+	if m.get(key, &v) {
+		return v
+	}
+	return def
+}
+
+func (m *MGSETTINGS) GetInt(key string, def int) int {
+	var v int
+	if m.get(key, &v) {
+		return v
+	}
+	return def
+}
+
+func (m *MGSETTINGS) GetBool(key string, def bool) bool {
+	var v bool
+	if m.get(key, &v) {
+		return v
+	}
+	return def
+}
+
+func (m *MGSETTINGS) GetStringSlice(key string, def []string) []string {
+	var v []string
+	if m.get(key, &v) {
+		return v
+	}
+	return def
+}
+
+func (m *MGSETTINGS) Save() error {
+	raw, err := json.MarshalIndent(m.data, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(m.pathfile, raw, 0644)
 }
