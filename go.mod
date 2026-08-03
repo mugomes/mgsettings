@@ -1,3 +1,3 @@
-module github.com/mugomes/mgsettings/v3
+module github.com/profmugomes/mgsettings/v3
 
-go 1.25.5
+go 1.26.5
