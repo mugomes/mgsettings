@@ -1,10 +1,5 @@
 # MGSettings
 
-<!-- Badge opcional para deixar claro visualmente -->
-![Status](https://img.shields.io/badge/status-arquivado--archived-red.svg)
-
-> **Aviso importante:** Esta biblioteca foi **oficialmente arquivada** e não receberá mais atualizações, correções de bugs ou suporte para novas versões.
-
 **MGSettings** é uma biblioteca leve em Go para **gerenciamento simples de configurações persistentes**, utilizando arquivos JSON armazenados automaticamente no diretório do usuário ou em um caminho customizado.
 
 Ideal para aplicações CLI, desktop ou serviços que precisam salvar preferências sem dependências externas.
@@ -29,7 +24,7 @@ Ideal para aplicações CLI, desktop ou serviços que precisam salvar preferênc
 ## 📦 Instalação
 
 ```bash
-go get github.com/mugomes/mgsettings
+go get github.com/profmugomes/mgsettings
 ```
 
 ---
@@ -39,7 +34,7 @@ go get github.com/mugomes/mgsettings
 ### Carregando configurações
 
 ```go
-import "github.com/mugomes/mgsettings"
+import "github.com/profmugomes/mgsettings"
 
 cfg, err := mgsettings.Load("meuapp", true)
 if err != nil {
@@ -110,9 +105,9 @@ Se a chave não existir, o valor padrão será retornado.
 
 **Murilo Gomes Julio**
 
-🔗 [https://mugomes.github.io](https://mugomes.github.io)
+🔗 [https://www.profmugomes.com.br](https://www.profmugomes.com.br)
 
-📺 [https://youtube.com/@mugomesoficial](https://youtube.com/@mugomesoficial)
+📺 [https://youtube.com/@profmugomes](https://youtube.com/@profmugomes)
 
 ---
 
@@ -120,6 +115,6 @@ Se a chave não existir, o valor padrão será retornado.
 
 Copyright (c) 2025-2026 Murilo Gomes Julio
 
-Licensed under the [MIT](https://github.com/mugomes/mgsettings/blob/main/LICENSE) license.
+Licensed under the [MIT](https://github.com/profmugomes/mgsettings/blob/main/LICENSE) license.
 
 All contributions to the MGSettings are subject to this license.
