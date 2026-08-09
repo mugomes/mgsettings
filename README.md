@@ -1,6 +1,6 @@
 # MGSettings
 
-[![License](https://img.shields.io/badge/license-PolyForm%20Perimeter%201.0.0-5351FB)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-PolyForm%20Perimeter%201.0.1-5351FB)](LICENSE.md)
 
 **MGSettings** é uma biblioteca leve em Go para **gerenciamento simples de configurações persistentes**, utilizando arquivos JSON armazenados automaticamente no diretório do usuário ou em um caminho customizado.
 
