@@ -1,7 +1,7 @@
-// Copyright (C) 2025-2026 Murilo Gomes Julio
-// SPDX-License-Identifier: MIT
+// Required Notice: Copyright (c) 2025-2026 Murilo Gomes Julio. All Rights Reserved. (https://profmugomes.com.br)
 
-// Site: https://www.profmugomes.com.br
+// Licensed under the PolyForm Perimeter License 1.0.1.
+// See LICENSE.md for details.
 
 package mgsettings
 
@@ -11,13 +11,13 @@ import (
 	"path"
 )
 
-type MGSETTINGS struct {
+type mgsettings struct {
 	pathfile string
 	data     map[string]json.RawMessage
 }
 
-func Load(nameApp string, defaultPathHome bool) (*MGSETTINGS, error) {
-	m := &MGSETTINGS{
+func Load(nameApp string, defaultPathHome bool) (*mgsettings, error) {
+	m := &mgsettings{
 		data: make(map[string]json.RawMessage),
 	}
 
@@ -42,12 +42,12 @@ func Load(nameApp string, defaultPathHome bool) (*MGSETTINGS, error) {
 	return m, nil
 }
 
-func (m *MGSETTINGS) set(key string, v any) {
+func (m *mgsettings) set(key string, v any) {
 	raw, _ := json.Marshal(v)
 	m.data[key] = raw
 }
 
-func (m *MGSETTINGS) get(key string, out any) bool {
+func (m *mgsettings) get(key string, out any) bool {
 	raw, ok := m.data[key]
 	if !ok {
 		return false
@@ -55,23 +55,23 @@ func (m *MGSETTINGS) get(key string, out any) bool {
 	return json.Unmarshal(raw, out) == nil
 }
 
-func (m *MGSETTINGS) SetString(key, value string) {
+func (m *mgsettings) SetString(key, value string) {
 	m.set(key, value)
 }
 
-func (m *MGSETTINGS) SetInt(key string, value int) {
+func (m *mgsettings) SetInt(key string, value int) {
 	m.set(key, value)
 }
 
-func (m *MGSETTINGS) SetBool(key string, value bool) {
+func (m *mgsettings) SetBool(key string, value bool) {
 	m.set(key, value)
 }
 
-func (m *MGSETTINGS) SetStringSlice(key string, value []string) {
+func (m *mgsettings) SetStringSlice(key string, value []string) {
 	m.set(key, value)
 }
 
-func (m *MGSETTINGS) GetString(key string, def string) string {
+func (m *mgsettings) GetString(key string, def string) string {
 	var v string
 	if m.get(key, &v) {
 		return v
@@ -79,7 +79,7 @@ func (m *MGSETTINGS) GetString(key string, def string) string {
 	return def
 }
 
-func (m *MGSETTINGS) GetInt(key string, def int) int {
+func (m *mgsettings) GetInt(key string, def int) int {
 	var v int
 	if m.get(key, &v) {
 		return v
@@ -87,7 +87,7 @@ func (m *MGSETTINGS) GetInt(key string, def int) int {
 	return def
 }
 
-func (m *MGSETTINGS) GetBool(key string, def bool) bool {
+func (m *mgsettings) GetBool(key string, def bool) bool {
 	var v bool
 	if m.get(key, &v) {
 		return v
@@ -95,7 +95,7 @@ func (m *MGSETTINGS) GetBool(key string, def bool) bool {
 	return def
 }
 
-func (m *MGSETTINGS) GetStringSlice(key string, def []string) []string {
+func (m *mgsettings) GetStringSlice(key string, def []string) []string {
 	var v []string
 	if m.get(key, &v) {
 		return v
@@ -103,7 +103,7 @@ func (m *MGSETTINGS) GetStringSlice(key string, def []string) []string {
 	return def
 }
 
-func (m *MGSETTINGS) Save() error {
+func (m *mgsettings) Save() error {
 	raw, err := json.MarshalIndent(m.data, "", "  ")
 	if err != nil {
 		return err
